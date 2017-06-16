@@ -2,7 +2,7 @@ const electron = require('electron')
 const {app, Tray, Menu, BrowserWindow} = require('electron')
 const notifier = require('node-notifier')
 const AutoLaunch = require('auto-launch')
-const Store = require('electron-store');
+const Store = require('electron-store')
 const path = require('path')
 
 const appAutoLauncher = new AutoLaunch({
@@ -87,7 +87,7 @@ const launchApplication = () => {
         }
     ])
 
-    tray.setToolTip('Click to see the magic.')
+    tray.setToolTip('Click to set application settings.')
 
     tray.setContextMenu(contextMenu)
 
@@ -98,11 +98,11 @@ const launchApplication = () => {
     appAutoLauncher.isEnabled()
         .then(function (isEnabled) {
             if (isEnabled) {
-                return;
+                return
             }
             appAutoLauncher.enable()
                 .then(function () {
-                    store.set('config.launchOnStartup', true);
+                    store.set('config.launchOnStartup', true)
                 })
         })
         .catch(function (err) {
@@ -127,7 +127,7 @@ const toggleStartup = () => {
     if (launchOnStartup) {
         appAutoLauncher.enable()
             .then(function () {
-                store.set('config.launchOnStartup', true);
+                store.set('config.launchOnStartup', true)
                 notifyLaunchChanged()
             })
             .catch(function (err) {
@@ -136,7 +136,7 @@ const toggleStartup = () => {
     else {
         appAutoLauncher.disable()
             .then(function () {
-                store.set('config.launchOnStartup', false);
+                store.set('config.launchOnStartup', false)
                 notifyLaunchChanged()
             })
             .catch(function (err) {
@@ -147,7 +147,7 @@ const toggleStartup = () => {
 const notifyLaunchChanged = () => {
     notifier.notify({
         title: 'Startup status changed',
-        message: launchOnStartup ? 'You will have to launch the application every time you log in' : 'Gret! Application will launch on application startup',
+        message: launchOnStartup ? 'You will have to launch the application every time you log in' : 'Great! Application will launch on system startup',
         icon: path.join(__dirname, 'icons/eye.png'),
         contentImage: '',
         sound: playSound
@@ -171,14 +171,14 @@ const toggleTimer = () => {
 
 const toggleSound = () => {
     playSound = !playSound
-    store.set('config.playSound', playSound);
+    store.set('config.playSound', playSound)
 }
 
 const startTimer = () => {
     timerStarted = true
     timer = setTimeout(function () {
         takeABreak()
-    }, maxExpositionTime);
+    }, maxExpositionTime)
 }
 
 const stopTimer = () => {
@@ -190,8 +190,8 @@ const takeABreak = () => {
     stopTimer()
 
     notifier.notify({
-        title: 'Take a break !',
-        message: 'Great! Application will launch on application startup',
+        title: 'Take a break from the screen!',
+        message: 'Your eyes need to rest buddy.',
         icon: path.join(__dirname, 'icons/eye.png'),
         contentImage: '',
         sound: playSound
@@ -200,7 +200,7 @@ const takeABreak = () => {
     setTimeout(function () {
         notifier.notify({
             title: 'Go back to work !',
-            message: 'Great! Application will launch on application startup',
+            message: 'Yay !',
             icon: path.join(__dirname, 'icons/eye.png'),
             contentImage: '',
             sound: playSound
