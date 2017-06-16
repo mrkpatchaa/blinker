@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Blinker</title>
+    <style>
+        body {
+            font-size: .9em;
+            font-family: sans-serif;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function openUrl(element) {
+            require('electron').shell.openExternal(element.getAttribute('data-href'))
+        }
+    </script>
+</head>
+<body>
+<h1>About Blinker</h1>
+<h2 id="give-your-eyes-a-rest-will-ya"><strong>Give your eyes a rest will ya!</strong></h2>
+
+<p>Inspired by the 20 20 20 rule, this is a little reminder to look 20 feet away from your screen every 20 minutes. Keep
+    your eyes healthy, reduce eye strain, prevent headaches and increase productivity.</p>
+
+<p>This is a simple application based on electron that will display a tray icon to help you configure how you want it to
+    work.</p>
+
+<p>Inspired by : <a href="#" data-href="http://www.blynker.com/#" onclick="openUrl(this)">http://www.blynker.com/#</a></p>
+
+<p>Application home : <a href="#" data-href="https://github.com/rmkpatchaa/blinker" onclick="openUrl(this)">https://github.com/rmkpatchaa/blinker</a></p>
+</body>
+</html>
