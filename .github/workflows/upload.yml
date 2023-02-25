@@ -8,6 +8,16 @@ jobs:
   publish:
     name: Build (${{ matrix.os }} - ${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+      checks: write
+
+      actions: read
+      issues: read
+      packages: write
+      pull-requests: read
+      repository-projects: read
+      statuses: read
     strategy:
       matrix:
         # Build for supported platforms
