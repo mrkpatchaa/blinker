@@ -34,6 +34,7 @@ jobs:
     name: Build (${{ matrix.os }} - ${{ matrix.arch }})
     runs-on: ${{ matrix.os }}
     if: ${{ github.ref == 'refs/heads/main' }}
+    needs: test
     strategy:
       matrix:
         # Build for supported platforms
@@ -66,7 +67,7 @@ jobs:
   release-new-versions:
     name: Create a new release.
     runs-on: ubuntu-latest
-    needs: test
+    needs: build-and-publish-artifacts
     permissions:
       contents: write
     if: ${{ github.ref == 'refs/heads/main' }}
