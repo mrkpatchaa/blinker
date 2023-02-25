@@ -51,7 +51,7 @@ jobs:
       - name: Create Release
         uses: thomaseizinger/create-release@1.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_DEPLOY_KEY_PRIVATE }}
         with:
           target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
           tag_name: v${{ steps.get-version.outputs.version }}
@@ -69,7 +69,7 @@ jobs:
         continue-on-error: true
         uses: thomaseizinger/create-pull-request@1.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_DEPLOY_KEY_PRIVATE }}
         with:
           head: main
           base: develop
