@@ -30,6 +30,39 @@ jobs:
       - run: npm run build --if-present
       - run: npm test --if-present
 
+  build-and-publish-artifacts:
+    name: Build (${{ matrix.os }} - ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.ref == 'refs/heads/main' }}
+    strategy:
+      matrix:
+        # Build for supported platforms
+        # https://www.electronforge.io/core-concepts/build-lifecycle
+        # https://github.com/electron/electron-packager/blob/ebcbd439ff3e0f6f92fa880ff28a8670a9bcf2ab/src/targets.js#L9
+        # 32-bit Linux unsupported as of 2019: https://www.electronjs.org/blog/linux-32bit-support
+        os: [macOS-latest, ubuntu-latest]
+        arch: [x64, arm64]
+        include:
+          - os: ubuntu-latest
+            arch: armv7l
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Install deps
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.x
+          cache: "npm"
+      - run: npm ci
+      - run: npm test --if-present
+      - name: Make
+        run: npm run make --arch=${{ matrix.arch }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: ./out/**/*.(dmg|deb)
+
   release-new-versions:
     name: Create a new release.
     runs-on: ubuntu-latest
@@ -49,12 +82,17 @@ jobs:
         run: |
           npm --no-git-tag-version version ${{ github.event.inputs.release_type }}
           echo "::set-output name=version::$(grep '"version":' package.json | cut -d\" -f4)"
+      - uses: actions/download-artifact@v3
+        name: Download previously uploaded artifacts
+        with:
+          name: my-artifact
+          path: out
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
-          # artifacts: "out/**/*.dmg, out/**/*.deb"
+          artifacts: "out/**/*.dmg, out/**/*.deb"
           name: v${{ steps.get-version.outputs.version }}
           commit: ${{ github.event.pull_request.merge_commit_sha }}
           tag: v${{ steps.get-version.outputs.version }}
