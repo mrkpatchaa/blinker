@@ -114,7 +114,8 @@ const launchApplication = () => {
         height: 350,
         show: false,
         frame: false,
-        resizable: false
+        resizable: false,
+        icon: '/icons/eye.png'
     })
     aboutWindow.loadURL(`file://${path.join(__dirname, 'about.html')}`)
     aboutWindow.on('blur', () => {
