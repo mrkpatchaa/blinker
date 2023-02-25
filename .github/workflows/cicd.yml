@@ -70,8 +70,8 @@ jobs:
       - run: npm test --if-present
       - name: Make
         run: npm run make --arch=${{ matrix.arch }}
-      # - uses: actions/upload-artifact@v3
-      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
+      - uses: actions/upload-artifact@v3
+        # - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
         with:
           name: my-artifact
           path: |
