@@ -7,22 +7,35 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    name: Build (${{ matrix.os }} - ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # Build for supported platforms
+        # https://www.electronforge.io/core-concepts/build-lifecycle
+        # https://github.com/electron/electron-packager/blob/ebcbd439ff3e0f6f92fa880ff28a8670a9bcf2ab/src/targets.js#L9
+        # 32-bit Linux unsupported as of 2019: https://www.electronjs.org/blog/linux-32bit-support
+        os: [macOS-latest, ubuntu-latest]
+        arch: [x64, arm64]
+        include:
+          - os: ubuntu-latest
+            arch: armv7l
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - name: Install deps using Node ${{ matrix.node-version }}
+      - name: Install deps
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
           cache: "npm"
       - run: npm ci
       - run: npm test --if-present
-      - run: npm run make
+      - name: Make
+        run: npm run make --arch=${{ matrix.arch }}
       - name: Upload release binaries
         uses: alexellis/upload-assets@master
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          asset_paths: '["./out/com.mrkpatchaa.blinker/make/*"]'
+          asset_paths: '["./out/**/*.dmg", "./out/**/*.deb"]'
