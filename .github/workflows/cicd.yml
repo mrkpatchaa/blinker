@@ -83,7 +83,8 @@ jobs:
         # Build for supported platforms
         # https://github.com/electron/electron-packager/blob/ebcbd439ff3e0f6f92fa880ff28a8670a9bcf2ab/src/targets.js#L9
         # 32-bit Linux unsupported as of 2019: https://www.electronjs.org/blog/linux-32bit-support
-        os: [macOS-latest, ubuntu-latest, windows-latest]
+        # os: [macOS-latest, ubuntu-latest, windows-latest]
+        os: [windows-latest]
         arch: [x64, arm64]
         include:
           # - os: windows-latest
@@ -107,7 +108,7 @@ jobs:
           cache: "npm"
       - run: npm ci
       - name: Add msi to path
-        run: echo "${env:wix}bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        run: echo "${env:wix}bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
         if: matrix.os == 'windows-latest'
       - name: Make
         run: npm run make --arch=${{ matrix.arch }}
@@ -123,7 +124,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{needs.release-new-version.outputs.version}}
-          file: out/**/*.{dmg,deb,exe}
+          file: out/**/blinker*.{dmg,deb,exe}
           overwrite: true
           file_glob: true
 
