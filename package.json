@@ -1,6 +1,6 @@
 {
   "name": "blinker",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A little electron app that remindes you to look 20 feet away from your screen every 20 minutes.",
   "main": "main.js",
   "scripts": {
