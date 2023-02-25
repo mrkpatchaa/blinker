@@ -30,42 +30,112 @@ jobs:
       - run: npm run build --if-present
       - run: npm test --if-present
 
-  release-new-versions:
+  release-new-version:
     name: Create a new release.
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
     needs: test
+    permissions:
+      contents: write
     if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 2
+          # ssh-key: ${{ secrets.GH_DEPLOY_KEY_PRIVATE }}
 
       - name: Get version
         id: get-version
         run: |
           npm --no-git-tag-version version ${{ github.event.inputs.release_type }}
           echo "::set-output name=version::$(grep '"version":' package.json | cut -d\" -f4)"
-
       - name: Create Release
-        uses: thomaseizinger/create-release@1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: create-release
+        uses: ncipollo/release-action@v1
         with:
-          target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
-          tag_name: v${{ steps.get-version.outputs.version }}
+          token: ${{ secrets.RELEASE_TOKEN }}
+          # artifacts: "out/**/*.dmg, out/**/*.deb, out/**/*.exe"
           name: v${{ steps.get-version.outputs.version }}
+          commit: ${{ github.event.pull_request.merge_commit_sha }}
+          tag: v${{ steps.get-version.outputs.version }}
           draft: false
           prerelease: false
+
+  publish-artifacts:
+    name: Build (${{ matrix.os }} - ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    needs: release-new-version
+    permissions:
+      contents: write
+      checks: write
+
+      actions: read
+      issues: read
+      packages: write
+      pull-requests: read
+      repository-projects: read
+      statuses: read
+    strategy:
+      # https://www.electronforge.io/core-concepts/build-lifecycle
+      matrix:
+        # Build for supported platforms
+        # https://github.com/electron/electron-packager/blob/ebcbd439ff3e0f6f92fa880ff28a8670a9bcf2ab/src/targets.js#L9
+        # 32-bit Linux unsupported as of 2019: https://www.electronjs.org/blog/linux-32bit-support
+        # os: [macOS-latest, ubuntu-latest, windows-latest]
+        os: [macOS-latest, ubuntu-latest]
+        arch: [x64, arm64]
+        include:
+          # - os: windows-latest
+          #   arch: ia32
+          - os: ubuntu-latest
+            arch: armv7l
+        # Publishing artifacts for multiple Windows architectures has
+        # a bug which can cause the wrong architecture to be downloaded
+        # for an update, so until that is fixed, only build Windows x64
+        exclude:
+          - os: windows-latest
+            arch: arm64
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Install deps
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.x
+          cache: "npm"
+      - run: npm ci
+      - name: Add msi to path
+        run: echo "${env:wix}bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        if: matrix.os == 'windows-latest'
+      - name: Make
+        run: npm run make --arch=${{ matrix.arch }}
+      # - name: Upload release binaries
+      #   uses: mrkpatchaa/upload-assets@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   with:
+      #     upload_url: ${{needs.release-new-version.outputs.upload_url}}
+      #     asset_paths: '["./out/**/*.dmg", "./out/**/*.deb, "./out/**/*.exe"]'
+      - name: Upload release binaries
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{needs.release-new-version.outputs.version}}
+          file: out/**/blinker*.{dmg,deb,exe}
+          overwrite: true
+          file_glob: true
 
   sync-develop:
     name: Sync develop branch
     runs-on: ubuntu-latest
-    needs: test
-    continue-on-error: true
+    needs: release-new-version
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - name: Merge main into develop branch
+        continue-on-error: true
         uses: thomaseizinger/create-pull-request@1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
