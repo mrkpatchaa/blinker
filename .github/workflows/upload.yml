@@ -1,9 +1,8 @@
 name: Upload release binaries
 
 on:
-  push:
-    tags:
-      - "*"
+  release:
+    types: [published]
 
 jobs:
   publish:
