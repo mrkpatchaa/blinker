@@ -34,7 +34,7 @@ jobs:
     name: Create a new release.
     runs-on: ubuntu-latest
     outputs:
-      upload_url: ${{ steps.create-release.outputs.upload_url }}
+      version: ${{ steps.get-version.outputs.version }}
     needs: test
     permissions:
       contents: write
@@ -111,13 +111,21 @@ jobs:
         if: matrix.os == 'windows-latest'
       - name: Make
         run: npm run make --arch=${{ matrix.arch }}
+      # - name: Upload release binaries
+      #   uses: mrkpatchaa/upload-assets@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   with:
+      #     upload_url: ${{needs.release-new-version.outputs.upload_url}}
+      #     asset_paths: '["./out/**/*.dmg", "./out/**/*.deb, "./out/**/*.exe"]'
       - name: Upload release binaries
-        uses: mrkpatchaa/upload-assets@master
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+        uses: svenstaro/upload-release-action@v2
         with:
-          upload_url: ${{needs.release-new-version.outputs.upload_url}}
-          asset_paths: '["./out/**/*.dmg", "./out/**/*.deb, "./out/**/*.exe"]'
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{needs.release-new-version.outputs.version}}
+          file: out/**/*.{dmg,deb,exe}
+          overwrite: true
+          file_glob: true
 
   sync-develop:
     name: Sync develop branch
