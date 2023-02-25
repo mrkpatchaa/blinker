@@ -46,6 +46,6 @@ jobs:
       - name: Upload release binaries
         uses: alexellis/upload-assets@master
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           asset_paths: '["./out/**/*.dmg", "./out/**/*.deb"]'
