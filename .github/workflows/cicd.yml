@@ -44,8 +44,8 @@ jobs:
         os: [macOS-latest, ubuntu-latest, windows-latest]
         arch: [x64, arm64]
         include:
-          - os: windows-latest
-            arch: ia32
+          # - os: windows-latest
+          #   arch: ia32
           - os: ubuntu-latest
             arch: armv7l
         # Publishing artifacts for multiple Windows architectures has
