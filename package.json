@@ -4,10 +4,10 @@
   "description": "A little electron app that remindes you to look 20 feet away from your screen every 20 minutes.",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "package:linux": "electron-packager . --icon=icons/eye --out=releases --platform=linux --overwrite=true --ignore=.idea --ignore=.gitignore && tar cvzf releases/blinker-linux-x64.tar.gz releases/blinker-linux-x64",
-    "package:darwin": "electron-packager . --icon=icons/eye --out=releases --platform=darwin --overwrite=true --ignore=.idea --ignore=.gitignore && tar cvzf releases/blinker-darwin-x64.tar.gz releases/blinker-darwin-x64",
-    "package": "rm -rf releases/* && npm run package:linux && npm run package:darwin && rm -rf releases/blinker-linux-x64 && rm -rf releases/blinker-darwin-x64"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "gen-icons": "./node_modules/.bin/electron-icon-maker-forge --i=eye.png --o=./ -n eye"
   },
   "productName": "blinker",
   "repository": "https://github.com/electron/electron-quick-start",
@@ -21,13 +21,25 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "~>1.8.2-beta5",
-    "electron-packager": "^8.7.1",
-    "eslint": "^4.0.0"
+    "@electron-forge/cli": "^6.0.5",
+    "@electron-forge/maker-deb": "^6.0.5",
+    "@electron-forge/maker-dmg": "^6.0.5",
+    "@electron-forge/maker-rpm": "^6.0.5",
+    "@electron-forge/maker-squirrel": "^6.0.5",
+    "@electron-forge/maker-wix": "^6.0.5",
+    "@electron-forge/maker-zip": "^6.0.5",
+    "@mrkpatchaa/electron-icon-maker-forge": "^0.0.1",
+    "electron": "^23.1.1",
+    "electron-wix-msi": "^5.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.4"
   },
   "dependencies": {
-    "auto-launch": "^5.0.1",
-    "electron-store": "^1.1.0",
-    "node-notifier": "^5.1.2"
+    "auto-launch": "^5.0.5",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.1.0",
+    "node-notifier": "^10.0.1"
   }
 }
