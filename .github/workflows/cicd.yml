@@ -70,7 +70,9 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: out/**/*.{dmg|deb}
+          path: |
+            out/**/*.dmg
+            out/**/*.deb
           if-no-files-found: error
           retention-days: 1
 
