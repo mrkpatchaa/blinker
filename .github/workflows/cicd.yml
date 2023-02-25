@@ -70,12 +70,14 @@ jobs:
       - run: npm test --if-present
       - name: Make
         run: npm run make --arch=${{ matrix.arch }}
-      - uses: actions/upload-artifact@v3
+      # - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074
         with:
           name: my-artifact
           path: |
             out/**/*.dmg
             out/**/*.deb
+            out/**/*.exe
           if-no-files-found: error
           retention-days: 1
 
@@ -108,7 +110,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
-          artifacts: "out/**/*.dmg, out/**/*.deb"
+          artifacts: "out/**/*.dmg, out/**/*.deb, out/**/*.exe"
           name: v${{ steps.get-version.outputs.version }}
           commit: ${{ github.event.pull_request.merge_commit_sha }}
           tag: v${{ steps.get-version.outputs.version }}
