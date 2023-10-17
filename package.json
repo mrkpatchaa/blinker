@@ -1,6 +1,6 @@
 {
   "name": "blinker",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A little electron app that remindes you to look 20 feet away from your screen every 20 minutes.",
   "main": "main.js",
   "scripts": {
@@ -21,20 +21,20 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "@electron-forge/cli": "^6.2.1",
-    "@electron-forge/maker-deb": "^6.2.1",
-    "@electron-forge/maker-dmg": "^6.2.1",
-    "@electron-forge/maker-rpm": "^6.2.1",
-    "@electron-forge/maker-squirrel": "^6.2.1",
-    "@electron-forge/maker-wix": "^6.2.1",
-    "@electron-forge/maker-zip": "^6.2.1",
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-dmg": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-wix": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
     "@mrkpatchaa/electron-icon-maker-forge": "^0.0.1",
-    "electron": "^25.2.0",
+    "electron": "^27.0.0",
     "electron-wix-msi": "^5.0.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.8"
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.0.3"
   },
   "dependencies": {
     "auto-launch": "^5.0.6",
