@@ -1,4 +1,7 @@
-##**Give your eyes a rest will ya!**
+## Check Tauri version
+https://github.com/mrkpatchaa/blinker-tauri
+
+## **Give your eyes a rest will ya!**
 
 Inspired by the 20 20 20 rule, this is a little reminder to look 20 feet away from your screen every 20 minutes. Keep your eyes healthy, reduce eye strain, prevent headaches and increase productivity.
 
