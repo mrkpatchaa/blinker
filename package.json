@@ -28,7 +28,7 @@
     "@electron-forge/maker-squirrel": "^7.2.0",
     "@electron-forge/maker-wix": "^7.2.0",
     "@electron-forge/maker-zip": "^7.2.0",
-    "@mrkpatchaa/electron-icon-maker-forge": "^0.0.1",
+    "@mrkpatchaa/electron-icon-maker-forge": "mrkpatchaa/electron-icon-maker",
     "electron": "^28.1.0",
     "electron-wix-msi": "^5.0.0",
     "eslint-config-prettier": "^9.1.0",
